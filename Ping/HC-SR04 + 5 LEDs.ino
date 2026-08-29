@@ -21,7 +21,6 @@ void loop() {
   delayMicroseconds(10); // Trigger pulse
   digitalWrite(trigPin, HIGH);
   delayMicroseconds(10); // Trigger pulse
-  digitalWrite(trigPin, HIGH);
   
   duration = pulseIn(echoPin, HIGH);
    
