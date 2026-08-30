@@ -37,22 +37,22 @@ void loop() {
   Serial.print(inches);
   Serial.println(" inches");
 
-  if (inches < 20) {
+  if (inches < 12.5) {
     if (!objectDetected) {
       objectDetected = true;
       digitalWrite(LED_PIN, HIGH);
-      myServo.write(180);
-      Serial.println("Object detected -> Servo 180°");
+      moveServoSlow(90);
+      Serial.println("Object detected -> Servo 90°");
     }
   } else {
     if (objectDetected) {
       objectDetected = false;
       objectLeftTime = millis();
-      Serial.println("Object left -> Starting 3 second timer");
+      Serial.println("Object left -> Starting 2 second timer");
     }
-    if (millis() - objectLeftTime >= 3000) {
-      myServo.write(0);
-      Serial.println("3 seconds passed -> Servo 0°");
+    if (millis() - objectLeftTime >= 2000) {
+      moveServoSlow(0);
+      Serial.println("2 seconds passed -> Servo 0°");
       digitalWrite(LED_PIN, LOW);
     }
   }
@@ -61,4 +61,24 @@ void loop() {
 
 long microSecondsToInches(long microseconds) {
   return microseconds / 74 / 2;
+}
+
+void moveServoSlow(int targetAngle) {
+
+  int currentAngle = myServo.read();
+
+  if (currentAngle < targetAngle) {
+
+    for (int angle = currentAngle; angle <= targetAngle; angle++) {
+      myServo.write(angle);
+      delay(10);
+    }
+
+  } else {
+
+    for (int angle = currentAngle; angle >= targetAngle; angle--) {
+      myServo.write(angle);
+      delay(10);
+    }
+  }
 }
